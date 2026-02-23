@@ -44,7 +44,6 @@ namespace Snowballs
             // Not sure if any other projectiles do this little damage, but using -1 damage causes a weird bugged damage number above monsters
             return proj.projectileID.Value == -1 && proj.damageToFarmer.Value <= 1;
         }
-//todo: add pets to ts, reads as 0 friendship for some reason
         public static bool CollisionFix(Projectile __instance, GameLocation location, Character target, TerrainFeature terrainFeature)
         {
             if (__instance is BasicProjectile basicProj)
