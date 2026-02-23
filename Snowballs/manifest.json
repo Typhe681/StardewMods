@@ -1,0 +1,9 @@
+{
+  "Name": "Snowballs",
+  "Author": "Typhe",
+  "Version": "1.0.0",
+  "MinimumApiVersion": "4.1.1",
+  "Description": "Throw snowballs at your friends! (or enemies)",
+  "UniqueID": "Typhe.Snowballs",
+  "EntryDll": "Snowballs.dll"
+}
