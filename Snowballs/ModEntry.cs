@@ -98,13 +98,16 @@ namespace Snowballs
 
         private void HoeSnoe(object sender, TerrainFeatureListChangedEventArgs e)
         {
-            if (!Context.IsWorldReady || Game1.currentSeason != "winter")
+            if (!Context.IsWorldReady)
                 return;
             var Location = e.Location;
+            bool isSnowyMines = false;
             bool validLocation = false;
-            if (Location.IsOutdoors && !Location.InIslandContext() && !Location.InDesertContext() || Location is MineShaft mine && mine.mineLevel >= 40 && mine.mineLevel < 80)
+            if (Location is MineShaft mine && mine.mineLevel >= 40 && mine.mineLevel < 80)
+                isSnowyMines = true;
+            if (Location.IsOutdoors && !Location.InIslandContext() && !Location.InDesertContext() || isSnowyMines)
                 validLocation = true;
-            if (validLocation == false)
+            if (validLocation == false || (Game1.currentSeason != "winter" && !isSnowyMines))
                 return;
             foreach (var pair in e.Added)
             {
@@ -118,3 +121,4 @@ namespace Snowballs
         }
     }
 }
+
