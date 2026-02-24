@@ -96,25 +96,23 @@ namespace Snowballs
             return true;
         }
 
-        private void HoeSnoe(object sender, TerrainFeatureListChangedEventArgs e)
-        {
-            if (!Context.IsWorldReady || Game1.currentSeason != "winter")
-                return;
-            var Location = e.Location;
-            bool validLocation = false;
-            if (Location.IsOutdoors && !Location.InIslandContext() && !Location.InDesertContext() || Location is MineShaft mine && mine.mineLevel >= 40 && mine.mineLevel < 80)
-                validLocation = true;
-            if (validLocation == false)
-                return;
-            foreach (var pair in e.Added)
-            {
-                if (pair.Value is HoeDirt)
-                {
-                    Vector2 tile = pair.Key;
-                    Item snowball = ItemRegistry.Create(snowballName, 1, allowNull: false);
-                    Game1.createItemDebris(snowball, new Vector2(tile.X * 64, tile.Y * 64), -1);
-                }
-            }
-        }
+		private void HoeSnoe(object sender, TerrainFeatureListChangedEventArgs e)
+		{
+			bool flag = !Context.IsWorldReady || Game1.currentSeason != "winter";
+			if (!flag)
+			{
+				foreach (KeyValuePair<Vector2, TerrainFeature> pair in e.Added)
+				{
+					bool flag2 = pair.Value is HoeDirt;
+					if (flag2)
+					{
+						Vector2 tile = pair.Key;
+						Item snowball = ItemRegistry.Create("(O)Typhe.SnowballAssets_Snowball", 1, 0, false);
+						Game1.createItemDebris(snowball, new Vector2(tile.X * 64f, tile.Y * 64f), -1, null, -1, false);
+					}
+				}
+			}
+		}
     }
 }
+
