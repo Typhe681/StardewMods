@@ -7,6 +7,7 @@ using StardewValley.Projectiles;
 using HarmonyLib;
 using System;
 using StardewValley.Monsters;
+using StardewValley.Locations;
 
 namespace Snowballs
 {
@@ -48,10 +49,8 @@ namespace Snowballs
         {
             if (__instance is BasicProjectile basicProj)
             {
-                if (!IsSnowball(basicProj))
-                {   
+                if (!IsSnowball(basicProj))   
                     return true;
-                }
                 if (target != null)
                 {
                     Game1.playSound("snowyStep");
@@ -101,7 +100,12 @@ namespace Snowballs
         {
             if (!Context.IsWorldReady || Game1.currentSeason != "winter")
                 return;
-
+            var Location = e.Location;
+            bool validLocation = false;
+            if (Location.IsOutdoors && !Location.InIslandContext() && !Location.InDesertContext() || Location is MineShaft mine && mine.mineLevel >= 40 && mine.mineLevel < 80)
+                validLocation = true;
+            if (validLocation == false)
+                return;
             foreach (var pair in e.Added)
             {
                 if (pair.Value is HoeDirt)
