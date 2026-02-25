@@ -27,6 +27,7 @@ namespace Snowballs
             instance = this;
             Config = helper.ReadConfig<ModConfig>();
             helper.Events.World.TerrainFeatureListChanged += HoeSnoe; // dr seuss lol
+            Helper.Events.Multiplayer.ModMessageReceived += OnModMessageReceived;
             var harmony = new Harmony("Typhe.Snowballs");
             try
             {
@@ -68,16 +69,16 @@ namespace Snowballs
                             if (Game1.random.NextDouble() < 0.10)
                             {
                                 friendship.Points += instance.Config.FriendshipBonus;
-                                npcTarget.doEmote(56); // music note emote :)
+                                instance.ShowEmote(npcTarget, 56); // music note emote :)
                             }
                             else
                             {
-                                npcTarget.doEmote(20); // heart emote <3
+                                instance.ShowEmote(npcTarget,20); // heart emote <3
                             }
                         }
                         else
                         {
-                            npcTarget.doEmote(16); // exlamation point emote :o
+                            instance.ShowEmote(npcTarget,16); // exlamation point emote :o
                         }
                     }
                     if (target is Monster monsterTarget)
@@ -95,7 +96,36 @@ namespace Snowballs
             // non-snowballs run normally
             return true;
         }
-
+        private void OnModMessageReceived(object sender, StardewModdingAPI.Events.ModMessageReceivedEventArgs e)
+        {
+            if (e.FromModID != ModManifest.UniqueID || e.Type != "SnowballEmote")
+                return;
+            var msg = e.ReadAs<EmoteMessage>();
+            if (Game1.getCharacterFromName(msg.NpcName) is NPC npc)
+                npc.doEmote(msg.EmoteId);
+        }
+        private void ShowEmote(NPC npc, int emoteId)
+        {
+            if (npc == null)
+                return;
+            if (Context.IsMultiplayer)
+            {
+                // tell other clients to show this emote
+                var message = new EmoteMessage()
+                {
+                    NpcName = npc.Name,
+                    EmoteId = emoteId
+                };
+                Helper.Multiplayer.SendMessage(message, "SnowballEmote");
+            }
+            // show locally
+            npc.doEmote(emoteId);
+        }
+        private struct EmoteMessage
+        {
+            public string NpcName;
+            public int EmoteId;
+        }
         private void HoeSnoe(object sender, TerrainFeatureListChangedEventArgs e)
         {
             if (!Context.IsWorldReady)
@@ -121,4 +151,3 @@ namespace Snowballs
         }
     }
 }
-
