@@ -1,0 +1,9 @@
+{
+  "Name": "MinecartIssues",
+  "Author": "Typhe",
+  "Version": "1.0.0",
+  "MinimumApiVersion": "4.1.1",
+  "Description": "Minecarts will occasionally break down",
+  "UniqueID": "Typhe.MinecartIssues",
+  "EntryDll": "MinecartIssues.dll"
+}
